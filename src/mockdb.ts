@@ -18,6 +18,16 @@ const resolvers: Resolvers = {
             "Reuse for crafts or storage",
           ],
         },
+        {
+          id: 2,
+          name: "amazon box",
+          isRecyclable: true,
+          alternativeUses: [
+            "Composting",
+            "Use as kindling for fire",
+            "Reuse for crafts or storage",
+          ],
+        },
       ]
     },
   },

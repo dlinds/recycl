@@ -2,6 +2,15 @@ import express from "express"
 import { callOpenAI } from "./api"
 import { graphQLServer } from "./mockdb"
 
+export interface ActionPayload<T> {
+  action: {
+    name: string
+  }
+  input: T
+  request_query: string
+  session_variables: Record<string, string>
+}
+
 const app = express()
 const port = 3001
 
