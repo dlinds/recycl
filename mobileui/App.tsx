@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgrey',
     height: 48,
     width: '90%',
+    borderRadius: 8,
   },
   sectionTitle: {
     fontSize: 24,
