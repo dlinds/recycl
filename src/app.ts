@@ -1,6 +1,6 @@
 import express from "express"
 import { callOpenAI } from "./api"
-import { getItems } from "./hasura"
+import { addNewItem, getItems } from "./hasura"
 
 export interface ActionPayload<T> {
   action: {
@@ -43,9 +43,30 @@ app.get(
 
     const response = await callOpenAI(state, item)
 
-    res.send(response)
+    const newItem: Item = {
+      name: item,
+      state,
+      isRecyclable: response.isRecyclable,
+      alternativeUses: response.alternatives,
+    }
+
+    await handleAddingNewItemToHasura(newItem)
+
+    res.send(newItem)
   }
 )
+
+export interface Item {
+  name: string
+  state: string
+  isRecyclable: boolean
+  alternativeUses: string[]
+}
+
+const handleAddingNewItemToHasura = async (item: Item) => {
+  const { name, state, isRecyclable, alternativeUses } = item
+  await addNewItem(name, state, isRecyclable, alternativeUses)
+}
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`)

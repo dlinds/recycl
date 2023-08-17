@@ -37,3 +37,26 @@ export const getItems = async (itemName: string, state: string) => {
 
   return await fetchHasura(query)
 }
+
+export const addNewItem = async (
+  itemName: string,
+  state: string,
+  isRecyclable: boolean,
+  alternativeUses: string[]
+) => {
+  const alternativeUsesString = alternativeUses.join('","')
+
+  const query = `
+    mutation {
+      insert_items_one(object: {name: "${itemName}", state: "${state}", isRecyclable: ${isRecyclable}, alternativeUses: ["${alternativeUsesString}"]}) {
+        id
+        name
+        isRecyclable
+        alternativeUses
+        state
+      }
+    }
+  `
+
+  return await fetchHasura(query)
+}

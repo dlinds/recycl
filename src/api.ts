@@ -39,7 +39,7 @@ export const callOpenAI = async (
 
 interface IsRecyclable {
   isRecyclable: boolean
-  alternatives?: string[]
+  alternatives: string[]
 }
 
 const parseResponse = (response: any): IsRecyclable => {
