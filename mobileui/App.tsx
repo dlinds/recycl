@@ -34,11 +34,10 @@ function App(): JSX.Element {
   const [isLoading, setIsLoading] = useState(false)
 
   const makeCall = () => {
-    console.log('calling')
+    console.log('calling API')
     setIsLoading(true)
     callApi(item, usState)
       .then(res => {
-        console.log({ res })
         setIsRecyclable(res.isRecyclable)
         setAlternativeUses(res.alternativeUses)
         setIsLoading(false)
