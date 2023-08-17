@@ -4,7 +4,7 @@ import { callOpenAI } from "./api"
 const app = express()
 const port = 3001
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.send("Hello World!")
 })
 

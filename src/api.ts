@@ -3,11 +3,13 @@ import { ENV } from "./env_variables"
 
 const apiKey = ENV.OPENAI_API_KEY
 
-const openai = new OpenAI({
-  apiKey,
-})
-
 const main = async (location: string, item: string) => {
+  if (!apiKey) {
+    throw new Error("OPENAI_API_KEY not found")
+  }
+  const openai = new OpenAI({
+    apiKey,
+  })
   const completion = await openai.chat.completions.create({
     messages: [
       {
