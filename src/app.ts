@@ -1,6 +1,6 @@
 import express from "express"
 import { callOpenAI } from "./api"
-import { graphQLServer } from "./mockdb"
+import { getItems } from "./hasura"
 
 export interface ActionPayload<T> {
   action: {
@@ -13,8 +13,6 @@ export interface ActionPayload<T> {
 
 const app = express()
 const port = 3001
-
-app.use("/graphql", graphQLServer)
 
 app.get("/", (_, res) => {
   res.send("Hello World!")
@@ -36,11 +34,19 @@ app.get(
   async (req: TypedRequestBody<CanIRecycleQuery>, res: any) => {
     const { state, item } = req.query
 
-    const response = await callOpenAI(state, item)
+    const response = (await doesItemAlreadyExist(item))
+      ? "exists"
+      : await callOpenAI(state, item)
 
     res.send(response)
   }
 )
+
+const doesItemAlreadyExist = async (itemName: string) => {
+  const { items } = await getItems(itemName)
+
+  return items.length > 0
+}
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`)
