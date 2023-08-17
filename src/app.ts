@@ -1,6 +1,7 @@
 import express from "express"
 import { callOpenAI } from "./api"
 import { addNewItem, getItems } from "./hasura"
+import { CanIRecycleQuery, Item } from "./types"
 
 export interface ActionPayload<T> {
   action: {
@@ -22,11 +23,6 @@ interface TypedRequestBody<T> extends Express.Request {
   headers: Record<string, string>
   body: T
   query: T
-}
-
-interface CanIRecycleQuery {
-  state: string
-  item: string
 }
 
 app.get(
@@ -55,13 +51,6 @@ app.get(
     res.send(newItem)
   }
 )
-
-export interface Item {
-  name: string
-  state: string
-  isRecyclable: boolean
-  alternativeUses: string[]
-}
 
 const handleAddingNewItemToHasura = async (item: Item) => {
   const { name, state, isRecyclable, alternativeUses } = item

@@ -1,5 +1,6 @@
 import OpenAI from "openai"
 import { ENV } from "./env_variables"
+import { IsRecyclable } from "./types"
 
 const apiKey = ENV.OPENAI_API_KEY
 
@@ -35,11 +36,6 @@ export const callOpenAI = async (
   const apiResponse = await main(location, item)
 
   return parseResponse(apiResponse)
-}
-
-interface IsRecyclable {
-  isRecyclable: boolean
-  alternatives: string[]
 }
 
 const parseResponse = (response: any): IsRecyclable => {
