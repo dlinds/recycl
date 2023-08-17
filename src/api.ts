@@ -1,4 +1,7 @@
 import OpenAI from "openai"
+import { ENV } from "./env_variables"
+
+const apiKey = ENV.OPENAI_API_KEY
 
 const openai = new OpenAI({
   apiKey: "my api key", // defaults to process.env["OPENAI_API_KEY"]
@@ -26,5 +29,5 @@ const main = async (state: State, item: string) => {
 type State = "Oregon" | "Arizona"
 
 export const callOpenAI = (state: State, item: string): string => {
-  return `${state + item}`
+  return `${apiKey} `
 }
