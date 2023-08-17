@@ -8,11 +8,27 @@ app.get("/", (req, res) => {
   res.send("Hello World!")
 })
 
-app.get("/query", async (req, res) => {
-  const response = await callOpenAI("Oregon", "amazon box")
+interface TypedRequestBody<T> extends Express.Request {
+  headers: Record<string, string>
+  body: T
+  query: T
+}
 
-  res.send(response)
-})
+interface CanIRecycleQuery {
+  state: string
+  item: string
+}
+
+app.get(
+  "/CanIRecycle",
+  async (req: TypedRequestBody<CanIRecycleQuery>, res: any) => {
+    const { state, item } = req.query
+
+    const response = await callOpenAI(state, item)
+
+    res.send(response)
+  }
+)
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`)

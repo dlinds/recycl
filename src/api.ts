@@ -7,12 +7,12 @@ const openai = new OpenAI({
   apiKey,
 })
 
-const main = async (state: State, item: string) => {
+const main = async (location: string, item: string) => {
   const completion = await openai.chat.completions.create({
     messages: [
       {
         role: "user",
-        content: `In the state of ${state}, can you recycle ${item}? If I cannot, what can I do with ${item} instead? I want a JSON response in the following shape. I only want the JSON and nothing else (this is for an API app)
+        content: `In ${location}, can you recycle ${item}? If I cannot, what can I do with ${item} instead? I want a JSON response in the following shape. I only want the JSON and nothing else (this is for an API app)
         {
           isRecyclable: boolean,
           alternatives?: string[]
@@ -26,13 +26,11 @@ const main = async (state: State, item: string) => {
   return completion.choices
 }
 
-type State = "Oregon" | "Arizona"
-
 export const callOpenAI = async (
-  state: State,
+  location: string,
   item: string
 ): Promise<IsRecyclable> => {
-  const apiResponse = await main(state, item)
+  const apiResponse = await main(location, item)
 
   return parseResponse(apiResponse)
 }
