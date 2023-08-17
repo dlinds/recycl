@@ -1,14 +1,14 @@
-const fetch = require("node-fetch")
+const fetch = require('node-fetch')
 
-const HASURA_ENDPOINT = "http://localhost:8080/v1/graphql"
-const HASURA_ADMIN_SECRET = "myadminsecretkey"
+const HASURA_ENDPOINT = 'http://localhost:8080/v1/graphql'
+const HASURA_ADMIN_SECRET = 'myadminsecretkey'
 
 export async function fetchHasura(query: any, variables = {}) {
   const response = await fetch(HASURA_ENDPOINT, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "x-hasura-admin-secret": HASURA_ADMIN_SECRET,
+      'Content-Type': 'application/json',
+      'x-hasura-admin-secret': HASURA_ADMIN_SECRET,
     },
     body: JSON.stringify({ query, variables }),
   })
@@ -44,7 +44,8 @@ export const addNewItem = async (
   isRecyclable: boolean,
   alternativeUses: string[]
 ) => {
-  const alternativeUsesString = alternativeUses.join('","')
+  const alternativeUsesString =
+    alternativeUses.length > 0 ? alternativeUses.join('","') : ''
 
   const query = `
     mutation {
