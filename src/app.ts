@@ -1,15 +1,14 @@
 import express from "express"
-import { test } from "./test"
+import { callOpenAI } from "./api"
 const app = express()
 const port = 3001
 
 app.get("/", (req, res) => {
-  console.log("GET /")
   res.send("Hello World!")
 })
 
 app.get("/test", (req, res) => {
-  console.log(test())
+  console.log(callOpenAI("Oregon", "apple"))
   res.send("Hello World!")
 })
 
