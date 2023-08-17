@@ -1,0 +1,10 @@
+type Item {
+  id: Int!
+  name: String!
+  isRecyclable: Boolean!
+  alternativeUses: [String]
+}
+
+type Query {
+  items: [Item]
+}

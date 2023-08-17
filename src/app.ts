@@ -1,8 +1,11 @@
 import express from "express"
 import { callOpenAI } from "./api"
+import { graphQLServer } from "./mockdb"
 
 const app = express()
 const port = 3001
+
+app.use("/graphql", graphQLServer)
 
 app.get("/", (_, res) => {
   res.send("Hello World!")
