@@ -8,9 +8,10 @@ app.get("/", (req, res) => {
   res.send("Hello World!")
 })
 
-app.get("/test", (req, res) => {
-  console.log(callOpenAI("Oregon", "apple"))
-  res.send("Hello World!")
+app.get("/query", async (req, res) => {
+  const response = await callOpenAI("Oregon", "amazon box")
+
+  res.send(response)
 })
 
 app.listen(port, () => {

@@ -4,7 +4,7 @@ import { ENV } from "./env_variables"
 const apiKey = ENV.OPENAI_API_KEY
 
 const openai = new OpenAI({
-  apiKey: "my api key", // defaults to process.env["OPENAI_API_KEY"]
+  apiKey,
 })
 
 const main = async (state: State, item: string) => {
@@ -12,7 +12,7 @@ const main = async (state: State, item: string) => {
     messages: [
       {
         role: "user",
-        content: `In the state of ${state}, can you recycle ${item}? If I cannot, what can I do with ${item} instead? I want a JSON response in the following shape
+        content: `In the state of ${state}, can you recycle ${item}? If I cannot, what can I do with ${item} instead? I want a JSON response in the following shape. I only want the JSON and nothing else (this is for an API app)
         {
           isRecyclable: boolean,
           alternatives?: string[]
@@ -23,11 +23,32 @@ const main = async (state: State, item: string) => {
     model: "gpt-4",
   })
 
-  console.log(completion.choices)
+  return completion.choices
 }
 
 type State = "Oregon" | "Arizona"
 
-export const callOpenAI = (state: State, item: string): string => {
-  return `${apiKey} `
+export const callOpenAI = async (
+  state: State,
+  item: string
+): Promise<IsRecyclable> => {
+  const apiResponse = await main(state, item)
+
+  return parseResponse(apiResponse)
+}
+
+interface IsRecyclable {
+  isRecyclable: boolean
+  alternatives?: string[]
+}
+
+const parseResponse = (response: any): IsRecyclable => {
+  const parsed = JSON.parse(response[0].message.content)
+
+  const formatted: IsRecyclable = {
+    isRecyclable: parsed.isRecyclable,
+    alternatives: parsed.alternatives,
+  }
+
+  return formatted
 }
