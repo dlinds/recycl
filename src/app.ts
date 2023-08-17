@@ -32,21 +32,20 @@ interface CanIRecycleQuery {
 app.get(
   "/CanIRecycle",
   async (req: TypedRequestBody<CanIRecycleQuery>, res: any) => {
-    const { state, item } = req.query
+    const { item, state } = req.query
 
-    const response = (await doesItemAlreadyExist(item))
-      ? "exists"
-      : await callOpenAI(state, item)
+    const currentCachedItems = await getItems(item, state)
+
+    if (currentCachedItems.items.length > 0) {
+      res.send(currentCachedItems.items[0])
+      return
+    }
+
+    const response = await callOpenAI(state, item)
 
     res.send(response)
   }
 )
-
-const doesItemAlreadyExist = async (itemName: string) => {
-  const { items } = await getItems(itemName)
-
-  return items.length > 0
-}
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`)

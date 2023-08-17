@@ -22,30 +22,18 @@ export async function fetchHasura(query: any, variables = {}) {
   return responseBody.data
 }
 
-// Example usage:
-// const MY_QUERY = `
-//   query {
-//     items {
-//       id
-//       name
-//     }
-//   }
-// `
-
-// fetchHasura(MY_QUERY).then((data) => console.log(data))
-
-export const getItems = async (itemName: string) => {
-  // make query to to check if name already exists
+export const getItems = async (itemName: string, state: string) => {
   const query = `
-
-  query {
-    items(where: {name: {_eq: "${itemName}"}}) {
-      id
-      name
+    query {
+      items(where: {name: {_eq: "${itemName}"}, state: {_eq: "${state}"}}) {
+        id
+        name
+        isRecyclable
+        alternativeUses
+        state
+      }
     }
-  }
-
-  `
+    `
 
   return await fetchHasura(query)
 }
