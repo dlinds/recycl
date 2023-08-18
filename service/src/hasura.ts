@@ -49,7 +49,7 @@ export const addNewItem = async (
 
   const query = `
     mutation {
-      insert_items_one(object: {name: "${itemName}", state: "${state}", isRecyclable: ${isRecyclable}, alternativeUses: ["${alternativeUsesString}"]}) {
+      insert_items_one(object: {name: "${itemName.toLowerCase()}", state: "${state}", isRecyclable: ${isRecyclable}, alternativeUses: ["${alternativeUsesString}"]}) {
         id
         name
         isRecyclable

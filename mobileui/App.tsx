@@ -91,7 +91,7 @@ function App(): JSX.Element {
         <Text style={styles.sectionTitle}>What state are you in?</Text>
         <TextInput style={styles.input} onChangeText={handleSetUSState} />
         <Text style={styles.sectionTitle}>
-          What item do yo want to recycle?
+          What item do you want to recycle?
         </Text>
         <TextInput style={styles.input} onChangeText={handleSetItem} />
         <Pressable
