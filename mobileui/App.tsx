@@ -9,6 +9,7 @@ import {
   View,
   Pressable,
   ActivityIndicator,
+  Image,
 } from 'react-native'
 
 const callApi = async (item: string, state: string) => {
@@ -28,6 +29,9 @@ const callApi = async (item: string, state: string) => {
 }
 
 function App(): JSX.Element {
+  const darkButtonColor = '#006f00'
+  const lightButtonColor = '#009900'
+
   const [isRecyclable, setIsRecyclable] = useState<boolean | undefined>()
   const [alternativeUses, setAlternativeUses] = useState<string[] | undefined>()
 
@@ -36,7 +40,7 @@ function App(): JSX.Element {
   const makeCall = () => {
     console.log('calling API')
     setIsLoading(true)
-    callApi(item, usState)
+    callApi(item, location)
       .then(res => {
         setIsRecyclable(res.isRecyclable)
         setAlternativeUses(res.alternativeUses)
@@ -50,32 +54,32 @@ function App(): JSX.Element {
   const handleSetItem = (itemIn: string) => {
     setIsRecyclable(undefined)
     setItem(itemIn)
-    if (itemIn.length && usState.length) {
-      setSubmitButtonColor('#2f5a9e')
+    if (itemIn.length && location.length) {
+      setSubmitButtonColor(lightButtonColor)
     } else {
-      setSubmitButtonColor('#23457a')
+      setSubmitButtonColor(darkButtonColor)
     }
   }
 
-  const handleSetUSState = (state: string) => {
+  const handleSetLocation = (state: string) => {
     setIsRecyclable(undefined)
-    setUsState(state)
+    setLocation(state)
     if (state.length && item.length) {
-      setSubmitButtonColor('#2f5a9e')
+      setSubmitButtonColor(lightButtonColor)
     } else {
-      setSubmitButtonColor('#23457a')
+      setSubmitButtonColor(darkButtonColor)
     }
   }
 
   const handlePressIn = () => {
     makeCall()
-    setSubmitButtonColor('#23457a')
+    setSubmitButtonColor(darkButtonColor)
   }
 
-  const [usState, setUsState] = useState('')
+  const [location, setLocation] = useState('')
   const [item, setItem] = useState('')
 
-  const [submitButtonColor, setSubmitButtonColor] = useState('#23457a')
+  const [submitButtonColor, setSubmitButtonColor] = useState(darkButtonColor)
 
   return (
     <SafeAreaView style={styles.backgroundStyle}>
@@ -88,54 +92,75 @@ function App(): JSX.Element {
         style={styles.backgroundStyle}
         contentContainerStyle={styles.contentContainer}
       >
-        <Text style={styles.sectionTitle}>What state are you in?</Text>
-        <TextInput style={styles.input} onChangeText={handleSetUSState} />
-        <Text style={styles.sectionTitle}>
-          What item do you want to recycle?
-        </Text>
-        <TextInput style={styles.input} onChangeText={handleSetItem} />
+        <Image
+          source={require('./assets/images/transparent-recycle-logo.png')}
+          style={{ width: 120, height: 120 }}
+        />
+        <View style={styles.inputContainer}>
+          <Text style={styles.sectionTitle}>
+            What location do you want to search?
+          </Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={handleSetLocation}
+            textAlign="center"
+          />
+          <Text style={styles.sectionTitle}>
+            What item do you want to recycle?
+          </Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={handleSetItem}
+            textAlign="center"
+          />
+        </View>
         <Pressable
           style={{ ...styles.submitButton, backgroundColor: submitButtonColor }}
           onPressIn={handlePressIn}
-          onPressOut={() => setSubmitButtonColor('#2f5a9e')}
-          disabled={usState === '' || item === ''}
+          onPressOut={() => setSubmitButtonColor(lightButtonColor)}
+          disabled={location === '' || item === ''}
         >
           <Text style={{ color: styles.sectionTitle.color }}>Check!</Text>
         </Pressable>
 
-        {isLoading ? (
-          <ActivityIndicator style={styles.activityIndicator} />
-        ) : (
-          <>
-            <Text style={styles.resultText}>
-              {isRecyclable !== undefined
-                ? isRecyclable === true
-                  ? `Yes! ${item} is recyclable in the state of ${usState}`
-                  : `No, ${item} is not recyclable in the state of ${usState}`
-                : ''}
-            </Text>
-            {isRecyclable === false && (
-              <>
-                <Text style={styles.otherUsesHeader}>
-                  Here is how you can re-purpose it instead
-                </Text>
-                <View style={styles.otherUsesTextContainer}>
-                  {alternativeUses?.map((use, idx) => (
-                    <Text key={idx} style={styles.otherUsesText}>
-                      - {use}
-                    </Text>
-                  ))}
-                </View>
-              </>
-            )}
-          </>
-        )}
+        <View style={styles.resultsContainer}>
+          {isLoading ? (
+            <ActivityIndicator style={styles.activityIndicator} />
+          ) : (
+            <>
+              <Text style={styles.resultText}>
+                {isRecyclable !== undefined
+                  ? isRecyclable === true
+                    ? `Yes! ${item} is recyclable in ${location}`
+                    : `No, ${item} is not recyclable in ${location}`
+                  : ''}
+              </Text>
+              {isRecyclable === false && (
+                <>
+                  <Text style={styles.otherUsesHeader}>
+                    Here is how you can re-purpose it instead
+                  </Text>
+                  <View style={styles.otherUsesTextContainer}>
+                    {alternativeUses?.map((use, idx) => (
+                      <Text key={idx} style={styles.otherUsesText}>
+                        - {use}
+                      </Text>
+                    ))}
+                  </View>
+                </>
+              )}
+            </>
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
+  resultsContainer: {
+    height: 250,
+  },
   activityIndicator: {
     marginTop: 32,
   },
@@ -171,17 +196,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  inputContainer: {
+    height: 250,
+    marginTop: 32,
+    width: '100%',
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
   input: {
     marginBottom: 32,
     marginTop: 8,
     paddingHorizontal: 24,
     backgroundColor: 'lightgrey',
-    height: 48,
-    width: '90%',
+    height: 40,
+    width: '100%',
     borderRadius: 8,
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '600',
     color: '#fff',
   },
