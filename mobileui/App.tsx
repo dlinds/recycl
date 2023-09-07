@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   SafeAreaView,
   StatusBar,
@@ -10,11 +10,14 @@ import {
   Pressable,
   ActivityIndicator,
   Image,
+  KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native'
+import { SERVICE_URI } from '@env'
 
 const callApi = async (item: string, state: string) => {
   const response = await fetch(
-    `https://dlinds.ngrok.dev/CanIRecycle?state=${state}&item=${item}`
+    `${SERVICE_URI}/CanIRecycle?state=${state}&item=${item}`
   )
   const json = await response
     .json()
@@ -74,6 +77,7 @@ function App(): JSX.Element {
   const handlePressIn = () => {
     makeCall()
     setSubmitButtonColor(darkButtonColor)
+    Keyboard.dismiss()
   }
 
   const [location, setLocation] = useState('')
@@ -82,88 +86,97 @@ function App(): JSX.Element {
   const [submitButtonColor, setSubmitButtonColor] = useState(darkButtonColor)
 
   return (
-    <SafeAreaView style={styles.backgroundStyle}>
-      <StatusBar
-        barStyle={'light-content'}
-        backgroundColor={styles.backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.backgroundStyle}
-        contentContainerStyle={styles.contentContainer}
-      >
-        <Image
-          source={require('./assets/images/transparent-recycle-logo.png')}
-          style={{ width: 120, height: 120 }}
+    <KeyboardAvoidingView style={styles.keyboardAvoidingView}>
+      <SafeAreaView style={styles.backgroundStyle}>
+        <StatusBar
+          barStyle={'light-content'}
+          backgroundColor={styles.backgroundStyle.backgroundColor}
         />
-        <View style={styles.inputContainer}>
-          <Text style={styles.sectionTitle}>
-            What location do you want to search?
-          </Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleSetLocation}
-            textAlign="center"
-          />
-          <Text style={styles.sectionTitle}>
-            What item do you want to recycle?
-          </Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleSetItem}
-            textAlign="center"
-          />
-        </View>
-        <Pressable
-          style={{ ...styles.submitButton, backgroundColor: submitButtonColor }}
-          onPressIn={handlePressIn}
-          onPressOut={() => setSubmitButtonColor(lightButtonColor)}
-          disabled={location === '' || item === ''}
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={styles.backgroundStyle}
+          contentContainerStyle={styles.contentContainer}
         >
-          <Text style={{ color: styles.sectionTitle.color }}>Check!</Text>
-        </Pressable>
-
-        <View style={styles.resultsContainer}>
-          {isLoading ? (
-            <ActivityIndicator
-              style={styles.activityIndicator}
-              size="large"
-              color={darkButtonColor}
+          <Image
+            source={require('./assets/images/transparent-recycle-logo.png')}
+            style={{ width: 120, height: 120 }}
+          />
+          <View style={styles.inputContainer}>
+            <Text style={styles.sectionTitle}>
+              What location do you want to search?
+            </Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleSetLocation}
+              textAlign="center"
             />
-          ) : (
-            <>
-              <Text style={styles.resultText}>
-                {isRecyclable !== undefined
-                  ? isRecyclable === true
-                    ? `Yes! ${item} is recyclable in ${location}`
-                    : `No, ${item} is not recyclable in ${location}`
-                  : ''}
-              </Text>
-              {isRecyclable === false && (
-                <>
-                  <Text style={styles.otherUsesHeader}>
-                    Here is how you can re-purpose it instead
-                  </Text>
-                  <View style={styles.otherUsesTextContainer}>
-                    {alternativeUses?.map((use, idx) => (
-                      <Text key={idx} style={styles.otherUsesText}>
-                        - {use}
-                      </Text>
-                    ))}
-                  </View>
-                </>
-              )}
-            </>
-          )}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+            <Text style={styles.sectionTitle}>
+              What item do you want to recycle?
+            </Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleSetItem}
+              textAlign="center"
+            />
+          </View>
+          <Pressable
+            style={{
+              ...styles.submitButton,
+              backgroundColor: submitButtonColor,
+            }}
+            onPressIn={handlePressIn}
+            onPressOut={() => setSubmitButtonColor(lightButtonColor)}
+            disabled={location === '' || item === ''}
+          >
+            <Text style={{ color: styles.sectionTitle.color }}>Check!</Text>
+          </Pressable>
+
+          <View style={styles.resultsContainer}>
+            {isLoading ? (
+              <ActivityIndicator
+                style={styles.activityIndicator}
+                size="large"
+                color={darkButtonColor}
+              />
+            ) : (
+              <>
+                <Text style={styles.resultText}>
+                  {isRecyclable !== undefined
+                    ? isRecyclable === true
+                      ? `Yes! ${item} is recyclable in ${location}`
+                      : `No, ${item} is not recyclable in ${location}`
+                    : ''}
+                </Text>
+                {isRecyclable === false && (
+                  <>
+                    <Text style={styles.otherUsesHeader}>
+                      Here is how you can re-purpose it instead
+                    </Text>
+                    <View style={styles.otherUsesTextContainer}>
+                      {alternativeUses?.map((use, idx) => (
+                        <Text key={idx} style={styles.otherUsesText}>
+                          - {use}
+                        </Text>
+                      ))}
+                    </View>
+                  </>
+                )}
+              </>
+            )}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   resultsContainer: {
     height: 250,
+    paddingHorizontal: 16,
   },
   activityIndicator: {
     marginTop: 32,
@@ -216,6 +229,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: '100%',
     borderRadius: 8,
+    color: 'black',
   },
   sectionTitle: {
     fontSize: 20,
