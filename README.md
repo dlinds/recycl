@@ -23,11 +23,17 @@ Portland / Frozen Pizza Boxes
 Portland / Cardboard
 - Recyclable - YES
 
+### Screenshots
+
+|Not Recyclable|Recyclable|
+|---|---|
+|![image](https://github.com/dlinds/recycl/assets/7016167/034cc31c-9faa-491f-9010-dd37ad6e9107)|![image](https://github.com/dlinds/recycl/assets/7016167/1dcd5760-ee98-41d1-a071-712d24487897)|
+
 ## Stack
 
 This application is a monorepo. Inside is a service package and a mobileui package
 
-### service
+### Service
 
 ExpressJS running a NodeJS backend, serving API requests to CanIRecycle
 
@@ -59,7 +65,7 @@ Pre-requisites
 7. run `yarn start`
 8. Test out the API by going to http://localhost:3001/CanIRecycle?state=Oregon&item=amazon%20box. You should see a JSON result
 
-RECOMMENDED: If you plan to develop this on a physical phone, ngrok can be used to forward the 3001 port to a publicly accessible URL
+RECOMMENDED: If you plan to try this on a physical phone, ngrok can be used to forward the 3001 port to a publicly accessible URL
 
 1. Once the service is running, run `ngrok http 3001`
 2. Take note of the URL that is generated
