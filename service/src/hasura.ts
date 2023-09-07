@@ -25,7 +25,7 @@ export async function fetchHasura(query: any, variables = {}) {
 export const getItems = async (itemName: string, state: string) => {
   const query = `
     query {
-      items(where: {name: {_eq: "${itemName}"}, state: {_eq: "${state}"}}) {
+      items(where: {name: {_eq: "${itemName.toLowerCase()}"}, state: {_eq: "${state}"}}) {
         id
         name
         isRecyclable
