@@ -1,7 +1,7 @@
-import express from "express"
-import { callOpenAI } from "./api"
-import { addNewItem, getItems } from "./hasura"
-import { CanIRecycleQuery, Item } from "./types"
+import express from 'express'
+import { callOpenAI } from './api'
+import { addNewItem, getItems } from './hasura'
+import { CanIRecycleQuery, Item } from './types'
 
 export interface ActionPayload<T> {
   action: {
@@ -15,8 +15,8 @@ export interface ActionPayload<T> {
 const app = express()
 const port = 3001
 
-app.get("/", (_, res) => {
-  res.send("Hello World!")
+app.get('/', (_, res) => {
+  res.send('Hello World!')
 })
 
 interface TypedRequestBody<T> extends Express.Request {
@@ -26,7 +26,7 @@ interface TypedRequestBody<T> extends Express.Request {
 }
 
 app.get(
-  "/CanIRecycle",
+  '/CanIRecycle',
   async (req: TypedRequestBody<CanIRecycleQuery>, res: any) => {
     const { item, state } = req.query
 
