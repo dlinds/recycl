@@ -125,7 +125,11 @@ function App(): JSX.Element {
 
         <View style={styles.resultsContainer}>
           {isLoading ? (
-            <ActivityIndicator style={styles.activityIndicator} />
+            <ActivityIndicator
+              style={styles.activityIndicator}
+              size="large"
+              color={darkButtonColor}
+            />
           ) : (
             <>
               <Text style={styles.resultText}>
@@ -197,7 +201,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   inputContainer: {
-    height: 250,
+    height: 200,
     marginTop: 32,
     width: '100%',
     paddingHorizontal: 16,
